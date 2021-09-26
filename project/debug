@@ -1,0 +1,5 @@
+
+
+Django: OperationalError No Such Table
+
+        python manage.py migrate --run-syncdb

@@ -1,0 +1,187 @@
+{% extends 'circulars3191/layout.html' %}
+
+{%block maincontent%}
+
+<link rel="stylesheet" href="/static/forms/css/reset.min.css" 				    	>
+<link rel="stylesheet" href="/static/forms/css/style.css"        type="text/css"    >
+<link rel="stylesheet" href="/static/forms/css/table.css"							>
+
+<form action="{% url 'circular3191' %}" method="POST" id="msform">
+		{%  csrf_token %}
+	<!-- start progressbar -->
+	<ul id="progressbar">
+		<li class="active">گام اول</li>
+		<li>گام دوم</li>
+		<li>گام سوم</li>
+	</ul>
+	<!-- end progressbar -->
+	<!-- start step one form -->
+	<fieldset>
+		<h2 class="fs-title">نام پروژه</h2>
+		{{ form.project_name }}
+		<input type="button" name="next" class="next action-button" value="بعدی" />
+	</fieldset>
+	<!-- end step one form -->
+	<!-- start step two form -->
+	<fieldset>
+		<h2 class="fs-title">زیر گروه</h2>
+		<small>فقط شماره گروه را وارد نمایید</small>
+		{{ form.group }}
+		<h2 class="fs-title">تعداد تکرار</h2>
+		{{ form.repeatation }}
+		<h2 class="fs-title">نام زیر پروژه</h2>
+		<h5>برای هر زیرپروژه نام مجزا انتخاب کنید</h5>
+		{{ form.building_name }} 
+		<input type="button" name="previous" class="previous action-button" value="قبلی" />
+		<input type="button" name="next" class="next action-button" value="بعدی" />
+	</fieldset>
+	<!-- end step two form -->
+	<!-- start step three form -->
+	<fieldset>
+		<h2 class="fs-title">یکی از گزینه‌های زیر را وارد نمائید</h2>
+		
+		<div><br/>
+		<select class="fs-title" id="optionsPrice">
+			<option value="0">&hellip;</option>
+			<option value="straight">برآورد مستقیم</option>
+			<option value="unstraight">برآورد غیرمستقیم</option>
+		</select>
+		</div>
+		
+		<div style="display: none;" id="baravord"> 
+			<br/>
+			<h2 class="fs-title">برآورد براساس قیمت مستقیم</h2>
+			<small>مبلغ به میلیون ریال</small>
+			{{ form.initial_estimate }} 
+		</div>
+		<div style="display: none;" id="addUnstraight">
+			 <br/>
+			 <h2 class="fs-title">مساحت</h2> 
+			 <small>متر مربع</small>
+			 {{ form.area }}
+
+			 <h2 class="fs-title">قیمت هر متر زمین</h2>
+			 <small>میلیون ریال</small>
+			 {{ form.cost_per_meter }}
+
+		</div>
+	
+		<input class='btn btn-primary btn-sm col-md-4 col-xs-12' style='padding: 15px 0px;float:left' type="submit" value="محاسبه نهایی" name="calculate">
+		<input class='btn btn-primary btn-sm col-md-4 col-xs-12' style='padding: 15px 0px;float:right' type="submit" value=" زیرپروژه جدید" name="new">
+		<input type="button" name="previous" class="previous action-button" value="مرحله قبل" >
+
+	
+	</fieldset>
+	<!-- end step three form -->
+</form>	
+
+
+ <!-- Main content -->
+ 
+{%endblock%}
+
+{% block maincontent2 %}
+{% if rawstorage|length > 0 %}
+<!--
+<div class="card-body">
+	<table text-align = center class="table table-bordered" >
+	  <thead>
+		<tr>
+		  <th style="
+		  text-align: center;color: cornflowerblue;font-size: x-large;
+
+	  "> نام ساختمان</th>
+		  <th style="
+		  text-align: center;color: cornflowerblue;font-size: x-large;
+
+	  "> گروه ساختمانی </th>
+		  <th style="
+		  text-align: center;color: cornflowerblue;font-size: x-large;
+
+		  "> تعداد تکرار</th>
+		  <th style="
+		  text-align: center;color: cornflowerblue;font-size: x-large;
+
+	  ">  براورد اولیه  </th>
+		  <th style="
+		  text-align: center;color: cornflowerblue;font-size: x-large;
+
+	  "> مساحت زمین </th>
+		  <th style="
+		  text-align: center;color: cornflowerblue;font-size: x-large;
+
+	  ">  مبلغ هر متر زمین </th>
+		</tr>
+	  </thead>
+	  <tbody style="
+	  color: cadetblue;
+  ">
+	  {% for key , value in rawstorage.items %}
+		<tr>
+		  <td>ساختمان {{ key }}</td>
+		  <td style="text-align: center;font-size: large;">{{ value.group }}</td>
+		  <td style="text-align: center;font-size: large;">{{ value.repeatation }}</td>
+		  <td style="text-align: center;font-size: large;">{{ value.initial_estimate }}</td>
+		  <td style="text-align: center;font-size: large;">{{ value.area }}</td>
+		  <td style="text-align: center;font-size: large;">{{ value.cost }}</td>
+		</tr>
+	  {% endfor %}
+	  </tbody>
+	</table>
+</div> 
+-->
+{%endif%}
+{% if calstorage|length > 0 %}
+
+<div class="wrapper">
+		<div class="postion-center">
+		<table class="styled-table" >
+			<div class="header-style">
+			<col>
+			<colgroup span="2"></colgroup>
+			<colgroup span="2"></colgroup>
+				<tr class="header-style">
+					<th scope="colgroup">نام زیر پروژه</th>
+					<th colspan="2" scope="colgroup">قسمت اول</th>
+					<th  scope="colgroup">قسمت دوم</th>
+					 <th  scope="colgroup">قسمت سوم</th>
+					 <th  scope="colgroup">نهایی</th>
+					 <th  scope="colgroup">جمع کل</th>
+				  </tr>
+			<tr class="header-style ">
+			  <td  rowspan=""></td>
+			  <th  scope="col">بخش اول</th>
+			  <th  scope="col">بخش دوم</th>
+			  <td style="border-right: none;" rowspan=""></td>
+			  <td style="border-right: none;" rowspan=""></td>
+			  <td style="border-right: none;" rowspan=""></td>
+			  <td style="border-right: none;" rowspan=""></td>
+			</tr>
+			</div>
+
+			{% for key , value in calstorage.items %}
+			<tr>
+			  <th scope="row">{{key}}</th>
+			  <td>{{value.fee_step_one_first_part}}</td>
+			  <td>{{value.fee_step_one_second_part}}</td>
+			  <td>{{value.fee_step_two}}</td> 
+			  <td>{{value.fee_step_three}}</td>
+			  <td>{{value.fee_final}}</td>
+			  <td></td>
+			</tr>
+			{%endfor%}
+			<tr>
+				<td>نهایی</td>
+				<td></td>
+			    <td></td>
+			    <td></td> 
+			    <td></td>
+			    <td></td>
+				<td>{{finalfinal}}</td>
+			</tr>
+		  </table>
+		</div>
+</div> 
+{%endif%}				
+ 	
+{%endblock%}
